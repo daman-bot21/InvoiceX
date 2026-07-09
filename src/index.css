@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-majesti: 'Playfair Display', serif;
+  --font-tomket-boys: 'Space Grotesk', monospace;
+  --font-jt-rejiro: 'Inter', sans-serif;
+  
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-blue-dark: var(--brand-blue-dark);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-border: var(--brand-border);
+  --color-brand-light: var(--brand-light);
+  --color-brand-purple-light: var(--brand-purple-light);
+  --color-brand-purple: var(--brand-purple);
+  --color-brand-purple-dark: var(--brand-purple-dark);
+
+  --animate-fade-in: fade-in 0.25s ease-out;
+  --animate-slide-up: slide-up 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slide-down: slide-down 0.25s ease-out;
+  --animate-pulse-slow: pulse-slow 3s infinite ease-in-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slide-down {
+  from { transform: translateY(-16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+:root {
+  color-scheme: light dark;
+  --bg-page: #f4f4f5; /* Premium soft light grey, no completely white */
+  --bg-card: #ffffff;
+  --text-base: #09090b;
+  --text-muted: #71717a;
+  
+  --brand-blue: #3b82f6;
+  --brand-blue-dark: #1d4ed8;
+  --brand-dark: #ffffff;
+  --brand-border: #e4e4e7;
+  --brand-light: #f4f4f5;
+  --brand-purple-light: #f3e8ff;
+  --brand-purple: #7c3aed;
+  --brand-purple-dark: #4d325b;
+}
+
+.dark {
+  --bg-page: #000000; /* completely pitch dark black */
+  --bg-card: #09090b; /* card dark black */
+  --text-base: #fafafa;
+  --text-muted: #a1a1aa;
+  
+  --brand-blue: #60a5fa;
+  --brand-blue-dark: #3b82f6;
+  --brand-dark: #09090b;
+  --brand-border: #27272a;
+  --brand-light: #000000;
+  --brand-purple-light: #2e1065;
+  --brand-purple: #a78bfa;
+  --brand-purple-dark: #ffffff; /* Premium white button text trigger in dark mode */
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--brand-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  background-color: var(--bg-page);
+  color: var(--text-base);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Glassmorphism utility card */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(9, 9, 11, 0.08);
+}
+
+.dark .glass-panel {
+  background: rgba(9, 9, 11, 0.85); /* completely dark glass */
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ambient-glow {
+  box-shadow: 0 10px 40px -10px rgba(77, 50, 91, 0.10);
+}
+
+.dark .ambient-glow {
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.6);
+}
