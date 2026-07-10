@@ -44,7 +44,7 @@ describe('Invoice Service Unit Tests', () => {
       notes: '',
     });
 
-    expect(error).toBe('Invalid client Stellar address (must start with G, 56 characters)');
+    expect(error).toBe('Invalid client Stellar address (must start with G or C, 56 characters)');
   });
 
   it('should pass validation with correct input values', () => {
