@@ -506,8 +506,9 @@ function Layout({ children, onOpenWalletModal }: { children: React.ReactNode; on
         {/* Brand */}
         <div 
           onClick={() => navigateTo('landing')}
-          className="h-16 border-b border-brand-border/10 dark:border-white/5 flex items-center gap-2 px-6 cursor-pointer"
+          className="h-16 border-b border-brand-border/10 dark:border-white/5 flex items-center gap-2.5 px-6 cursor-pointer"
         >
+          <img src="/logo.png" alt="InvoiceX Logo" className="h-7 w-auto object-contain rounded" />
           <span className="font-majesti text-2xl font-bold bg-gradient-to-r from-brand-purple-dark to-brand-blue-dark dark:from-brand-purple dark:to-brand-blue bg-clip-text text-transparent">
             InvoiceX
           </span>
@@ -593,8 +594,9 @@ function Layout({ children, onOpenWalletModal }: { children: React.ReactNode; on
       <header className="md:hidden h-16 bg-white dark:bg-brand-dark border-b border-brand-border/20 dark:border-white/5 flex items-center justify-between px-4 z-40 select-none">
         <div 
           onClick={() => navigateTo('landing')}
-          className="flex items-center gap-1.5 cursor-pointer"
+          className="flex items-center gap-2 cursor-pointer"
         >
+          <img src="/logo.png" alt="InvoiceX Logo" className="h-6 w-auto object-contain rounded" />
           <span className="font-majesti text-xl font-bold bg-gradient-to-r from-brand-purple-dark to-brand-blue-dark dark:from-brand-purple dark:to-brand-blue bg-clip-text text-transparent">
             InvoiceX
           </span>
@@ -724,7 +726,11 @@ function LandingPage() {
     <div className="min-h-screen bg-brand-light/20 dark:bg-brand-dark/40 flex flex-col font-jt-rejiro">
       {/* Landing Nav */}
       <header className="h-20 max-w-7xl mx-auto w-full px-6 flex items-center justify-between select-none">
-        <div className="flex items-center gap-2 cursor-pointer">
+        <div 
+          onClick={() => navigateTo('landing')}
+          className="flex items-center gap-3 cursor-pointer"
+        >
+          <img src="/logo.png" alt="InvoiceX Logo" className="h-10 w-auto object-contain rounded-md" />
           <span className="font-majesti text-3xl font-extrabold bg-gradient-to-r from-brand-purple-dark via-brand-purple to-brand-blue-dark dark:from-brand-purple dark:to-brand-blue bg-clip-text text-transparent">
             InvoiceX
           </span>
