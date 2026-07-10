@@ -120,7 +120,7 @@ InvoiceX addresses the broken invoicing lifecycle by introducing a dual-contract
 
 ## 🚀 LIVE DEMO & TESTING GUIDE
 
-**Live Application URL**: [https://invoicex1.netlify.app](https://invoicex1.netlify.app)
+**Live Application URL**: [https://invoicex1.netlify.app](https://invoice-x-six.vercel.app/)
 
 To allow judges, developers, and users to test the full lifecycle, InvoiceX features a **dual-mode gateway**:
 
