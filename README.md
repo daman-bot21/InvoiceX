@@ -153,8 +153,8 @@ To allow judges, developers, and users to test the full lifecycle, InvoiceX feat
 
 Watch a complete product walkthrough of the InvoiceX platform showing the dual-mode gateway (Simulator & Stellar Testnet), smart contract deployments, and escrow payment lifecycle:
 
-[![InvoiceX Demo Video](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
-*(Replace `YOUR_VIDEO_ID` with your recorded YouTube video link ID once uploaded)*
+[InvoiceX Demo Video](https://drive.google.com/file/d/1fP1O2UEqU8X8qFTB2MUmD5KnWdjmDbE0/view?usp=sharing)
+
 
 ---
 
@@ -743,37 +743,25 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ## 🖼️ VISUAL SCREEN GALLERY
 
 ### Landing Page
-![Landing Page Screenshot Placeholder](https://placehold.co/800x450/111111/cccccc/png?text=InvoiceX+Landing+Page)
+<img width="1847" height="939" alt="image" src="https://github.com/user-attachments/assets/30642306-cc44-42f3-9f62-af28a65f4dd1" />
 
 ### Dashboard Overview
-![Dashboard Screenshot Placeholder](https://placehold.co/800x450/111111/cccccc/png?text=InvoiceX+Dashboard+Overview)
+<img width="1917" height="933" alt="image" src="https://github.com/user-attachments/assets/c5404cf2-d04f-4c12-a99b-4f18621c6aaf" />
 
 ### Wallet Connected State
-![Wallet State Placeholder](https://placehold.co/800x450/111111/cccccc/png?text=Wallet+Connected+Dashboard)
+<img width="1919" height="935" alt="image" src="https://github.com/user-attachments/assets/2325b747-4dab-404d-8dda-1ed91e3607b8" />
 
 ### Invoice Creation Portal
-![Invoice Creation Placeholder](https://placehold.co/800x450/111111/cccccc/png?text=Deploy+Invoice+Form)
+<img width="1904" height="928" alt="image" src="https://github.com/user-attachments/assets/acb1cc75-7ce8-48c8-9d89-556ead3b73e3" />
 
 ### Atomic Payment Confirmation
-![Payment Confirmation Placeholder](https://placehold.co/800x450/111111/cccccc/png?text=On-Chain+Settle+Receipt)
+<img width="1919" height="930" alt="image" src="https://github.com/user-attachments/assets/e09b73e1-9752-4321-854a-af683906188b" />
 
 ### Responsive Mobile UI
-![Mobile Viewport Placeholder](https://placehold.co/800x450/111111/cccccc/png?text=Mobile+Responsive+Dashboard)
-
-### Chronological Activity Feed
-![Activity Feed Placeholder](https://placehold.co/800x450/111111/cccccc/png?text=Soroban+Event+Logs)
-
-### Analytics Dashboard telemetry
-![Analytics Dashboard Placeholder](https://placehold.co/800x450/111111/cccccc/png?text=Sentry+and+GA4+Telemetry)
+<img width="467" height="826" alt="image" src="https://github.com/user-attachments/assets/97bac01f-8123-41c0-9e0a-36584cf7ff24" />
 
 ### CI/CD Pipelines Passing
-![CI/CD Screenshot Placeholder](https://placehold.co/800x450/111111/cccccc/png?text=GitHub+Actions+Build+Passing)
+<img width="1919" height="968" alt="image" src="https://github.com/user-attachments/assets/6fe0f5f0-526b-4e07-b0f2-202d163eb217" />
 
-### Test Suite Output
-![Test Suite Placeholder](https://placehold.co/800x450/111111/cccccc/png?text=Cargo+Test+Output+11+Passing)
 
-### User Validation Metrics
-![User Metrics Placeholder](https://placehold.co/800x450/111111/cccccc/png?text=User+Testing+Feedback+Metrics)
-
-### Demo Video Portal
-*A full video walkthrough is available in the [Demo Video](#-demo-video) section of this document.
+### [Demo Video](https://drive.google.com/file/d/1fP1O2UEqU8X8qFTB2MUmD5KnWdjmDbE0/view?usp=sharing)
