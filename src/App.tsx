@@ -37,6 +37,7 @@ import { AppProvider, useInvoiceX, type PageName } from './hooks/useInvoiceX';
 import { getInvoices, getCombinedActivityFeed, getInvoiceById, type InvoiceFormInput } from './services/invoice';
 import { getTransactionHistory, type TransactionItem } from './services/transactions';
 import { type InvoiceContractState } from './services/contract';
+import { getNetworkConfig } from './services/network';
 
 // Helper to format addresses for display
 const formatAddress = (address: string | null) => {
@@ -2056,7 +2057,7 @@ function InvoiceDetailsPage() {
             <div>
               <span className="text-[10px] text-gray-400 block font-tomket-boys">SOROBAN ID</span>
               <span className="text-[10px] font-mono text-gray-600 dark:text-gray-300 block truncate mt-1 bg-white dark:bg-brand-dark/50 p-1.5 rounded border border-brand-border/10 select-all font-tomket-boys">
-                CDA7M4K2Z6KRP4XF5FQCJZ66J4WCRKTRM6UX6GL57H7JSP2HULMXYVXT
+                {getNetworkConfig().contractId}
               </span>
             </div>
 

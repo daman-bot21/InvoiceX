@@ -25,7 +25,7 @@ foreach ($Line in $EnvContent) {
 $Network = "testnet"
 $SourceAccount = "admin"
 # Default Native XLM Token Contract Address on Stellar Testnet
-$TokenContract = "CDLZFC3SYJYDZT7K67VZ75HPJFCBQWOABMSIA27BHFC7WOFX734V2Z6I"
+$TokenContract = "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC"
 
 # Get Admin Public Key
 $AdminPubKey = (stellar keys address $SourceAccount).Trim()

@@ -9,6 +9,10 @@ $RegistryWasm = "target/wasm32-unknown-unknown/release/invoice_registry.wasm"
 $PaymentWasm = "target/wasm32-unknown-unknown/release/payment_manager.wasm"
 
 Write-Host "=== Building Smart Contracts ===" -ForegroundColor Green
+$RustupRustc = "$env:USERPROFILE\.rustup\toolchains\stable-x86_64-pc-windows-msvc\bin\rustc.exe"
+if (Test-Path $RustupRustc) {
+    $env:RUSTC = $RustupRustc
+}
 cargo build --target wasm32-unknown-unknown --release
 
 if (Get-Command stellar -ErrorAction SilentlyContinue) {

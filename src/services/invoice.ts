@@ -25,7 +25,7 @@ export function validateInvoiceInput(input: InvoiceFormInput): string | null {
   if (!input.clientEmail.trim()) return 'Client email is required';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.clientEmail.trim())) return 'Invalid client email address';
   if (!input.clientAddress.trim()) return 'Client Stellar address is required';
-  if (!/^G[A-Z2-7]{55}$/.test(input.clientAddress.trim())) return 'Invalid client Stellar address (must start with G, 56 characters)';
+  if (!/^[GC][A-Z2-7]{55}$/.test(input.clientAddress.trim())) return 'Invalid client Stellar address (must start with G or C, 56 characters)';
   if (!input.title.trim()) return 'Invoice title is required';
   if (!input.description.trim()) return 'Description is required';
   

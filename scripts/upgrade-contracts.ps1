@@ -21,6 +21,10 @@ $SourceAccount = "admin"
 $NewWasm = "target/wasm32-unknown-unknown/release/invoice_registry.wasm"
 
 Write-Host "=== Compiling new smart contract version ===" -ForegroundColor Green
+$RustupRustc = "$env:USERPROFILE\.rustup\toolchains\stable-x86_64-pc-windows-msvc\bin\rustc.exe"
+if (Test-Path $RustupRustc) {
+    $env:RUSTC = $RustupRustc
+}
 cargo build --target wasm32-unknown-unknown --release
 
 Write-Host "=== Uploading new WASM bytecode to Stellar network ===" -ForegroundColor Green

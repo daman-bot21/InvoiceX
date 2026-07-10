@@ -1,13 +1,14 @@
-import { 
-  Operation, 
-  TransactionBuilder, 
-  Networks, 
-  rpc, 
-  nativeToScVal, 
+import {
+  Operation,
+  TransactionBuilder,
+  Networks,
+  rpc,
+  nativeToScVal,
   Horizon,
   Address,
   Account,
-  scValToNative
+  scValToNative,
+  StrKey
 } from '@stellar/stellar-sdk';
 import { getNetworkConfig } from './network';
 import { signTxWithWallet } from './wallet';
@@ -219,6 +220,15 @@ export function addSimulatedEvent(event: Omit<ContractEvent, 'id' | 'timestamp'>
   saveSimulatedEvents(events);
 }
 
+export function isValidStellarAddress(address: string | null | undefined): boolean {
+  if (!address) return false;
+  try {
+    return StrKey.isValidEd25519PublicKey(address) || StrKey.isValidContract(address);
+  } catch {
+    return false;
+  }
+}
+
 // --- On-Chain Integration Helpers ---
 
 function parseStatus(nativeStatus: any): 'pending' | 'paid' | 'cancelled' {
@@ -251,13 +261,13 @@ async function simulateReadOnlyCall(
   const config = getNetworkConfig();
   const rpcServer = new rpc.Server(config.rpcUrl);
   const dummyAccount = new Account('GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF', '0');
-  
+
   const operation = Operation.invokeContractFunction({
     contract: contractId,
     function: functionName,
     args,
   });
-  
+
   const tx = new TransactionBuilder(dummyAccount, {
     fee: '100000',
     networkPassphrase: config.networkPassphrase,
@@ -265,16 +275,16 @@ async function simulateReadOnlyCall(
     .addOperation(operation)
     .setTimeout(30)
     .build();
-    
+
   const simResult = await rpcServer.simulateTransaction(tx);
   if (rpc.Api.isSimulationError(simResult)) {
     throw new Error(`Simulation error for ${functionName}: ${simResult.error}`);
   }
-  
+
   if (!simResult.result || !simResult.result.retval) {
     throw new Error(`No return value in simulation for ${functionName}`);
   }
-  
+
   return scValToNative(simResult.result.retval);
 }
 
@@ -283,20 +293,25 @@ export async function getOnChainInvoices(): Promise<InvoiceContractState[]> {
   if (config.mode === 'simulator') {
     return getSimulatedInvoices();
   }
-  
+
+  if (!isValidStellarAddress(config.contractId)) {
+    console.warn(`[getOnChainInvoices] Invalid registry contract ID configured: ${config.contractId}. Falling back to simulator data.`);
+    return getSimulatedInvoices();
+  }
+
   try {
     const ids: any = await simulateReadOnlyCall(
       config.contractId,
       'get_all_invoices'
     );
-    
+
     if (!ids || !Array.isArray(ids)) {
       return getSimulatedInvoices();
     }
-    
+
     const localInvoices = getSimulatedInvoices();
     const invoices: InvoiceContractState[] = [];
-    
+
     for (const idVal of ids) {
       try {
         const id = typeof idVal === 'string' ? idVal : idVal.toString();
@@ -305,13 +320,13 @@ export async function getOnChainInvoices(): Promise<InvoiceContractState[]> {
           'get_invoice',
           [nativeToScVal(id)]
         );
-        
+
         const status = parseStatus(nativeInvoice.status);
         const amount = (Number(nativeInvoice.amount) / 10000000).toFixed(4);
         const dueDate = new Date(Number(nativeInvoice.due_date) * 1000).toISOString().split('T')[0];
-        
+
         const localMatch = localInvoices.find(i => i.id === id);
-        
+
         invoices.push({
           id,
           clientName: localMatch?.clientName || `Client (${nativeInvoice.client.toString().substring(0, 6)}...)`,
@@ -333,7 +348,7 @@ export async function getOnChainInvoices(): Promise<InvoiceContractState[]> {
         console.error(`Error decoding invoice ${idVal}:`, e);
       }
     }
-    
+
     return invoices.sort((a, b) => b.timestamp - a.timestamp);
   } catch (error) {
     console.error('Failed to fetch on-chain invoices:', error);
@@ -346,7 +361,7 @@ export async function syncOnChainInvoices(): Promise<InvoiceContractState[]> {
   if (config.mode === 'simulator') {
     return getSimulatedInvoices();
   }
-  
+
   try {
     const onChainInvoices = await getOnChainInvoices();
     localStorage.setItem(SIMULATED_INVOICES_KEY, JSON.stringify(onChainInvoices));
@@ -365,11 +380,11 @@ function parseEvent(event: any): ContractEvent | null {
     const value = scValToNative(event.value);
     const txHash = event.txHash;
     const timestamp = event.ledgerClosedAt ? new Date(event.ledgerClosedAt).getTime() : Date.now();
-    
+
     if (topics.length === 0) return null;
     const eventTypeSymbol = topics[0];
     const eventType = typeof eventTypeSymbol === 'string' ? eventTypeSymbol : eventTypeSymbol?.toString();
-    
+
     if (eventType === 'invoice_created') {
       const invoiceId = topics[1];
       const creator = topics[2];
@@ -433,12 +448,12 @@ export async function syncOnChainEvents(): Promise<ContractEvent[]> {
   if (config.mode === 'simulator') {
     return getSimulatedEvents();
   }
-  
+
   try {
     const rpcServer = new rpc.Server(config.rpcUrl);
     const latestLedgerResponse = await rpcServer.getLatestLedger();
     const startLedger = Math.max(1, latestLedgerResponse.sequence - 5000);
-    
+
     const eventsResponse = await rpcServer.getEvents({
       startLedger,
       filters: [
@@ -449,7 +464,7 @@ export async function syncOnChainEvents(): Promise<ContractEvent[]> {
       ],
       limit: 100,
     });
-    
+
     const parsedEvents: ContractEvent[] = [];
     if (eventsResponse && eventsResponse.events) {
       for (const rawEvt of eventsResponse.events) {
@@ -459,13 +474,13 @@ export async function syncOnChainEvents(): Promise<ContractEvent[]> {
         }
       }
     }
-    
+
     const cachedEvents = getSimulatedEvents();
     const allEvents = [...parsedEvents, ...cachedEvents];
     const uniqueEvents = allEvents.filter(
       (evt, index, self) => self.findIndex(e => e.id === evt.id) === index
     );
-    
+
     localStorage.setItem('invoicex_simulated_events', JSON.stringify(uniqueEvents));
     window.dispatchEvent(new Event('invoicex_events_update'));
     return uniqueEvents;
@@ -513,7 +528,7 @@ export async function createInvoiceContract(
 
     const invoices = getSimulatedInvoices();
     const txHash = `sim_hash_create_${Math.random().toString(36).substr(2, 16)}`;
-    
+
     const newInvoice: InvoiceContractState = {
       id: invoiceId,
       clientName: params.clientName,
@@ -532,7 +547,7 @@ export async function createInvoiceContract(
 
     invoices.unshift(newInvoice);
     saveSimulatedInvoices(invoices);
-    
+
     // Add Contract Event
     addSimulatedEvent({
       type: 'created',
@@ -553,7 +568,7 @@ export async function createInvoiceContract(
 
       // Load active account sequence
       const account = await horizonServer.loadAccount(creatorAddress);
-      
+
       // Build Soroban operation matching create_invoice signature in registry contract
       const operation = Operation.invokeContractFunction({
         contract: config.contractId,
@@ -589,7 +604,7 @@ export async function createInvoiceContract(
       // Sign with Wallet
       const signedTxXdr = await signTxWithWallet((assembledTx as any).toXDR(), creatorAddress);
       const finalTx = TransactionBuilder.fromXDR(signedTxXdr, Networks.TESTNET);
-      
+
       // Submit
       const sendResult = await rpcServer.sendTransaction(finalTx);
       if (sendResult.status === 'ERROR') {
@@ -659,7 +674,7 @@ export async function payInvoiceContract(
   clientName: string
 ): Promise<{ success: boolean; txHash: string; error?: string }> {
   const config = getNetworkConfig();
-  
+
   // Log a pending transaction to transaction history
   const txLog = addTransaction({
     id: `pending_${Math.random().toString(36).substr(2, 9)}`,
@@ -689,14 +704,14 @@ export async function payInvoiceContract(
         updateTransactionStatus(txLog.id, 'failed');
         return { success: false, txHash: '', error: 'Insufficient simulated balance!' };
       }
-      
+
       // Deduct balance and credit creator (simulated)
       localStorage.setItem('invoicex_sim_balance', (currentSimBal - paymentAmount).toFixed(4));
-      
+
       invoices[index].status = 'paid';
       invoices[index].payTxHash = txHash;
       saveSimulatedInvoices(invoices);
-      
+
       // Add Event
       addSimulatedEvent({
         type: 'paid',
@@ -710,7 +725,7 @@ export async function payInvoiceContract(
       window.dispatchEvent(new Event('invoicex_balance_change'));
       return { success: true, txHash };
     }
-    
+
     updateTransactionStatus(txLog.id, 'failed');
     return { success: false, txHash: '', error: 'Invoice not found!' };
   } else {
@@ -722,7 +737,7 @@ export async function payInvoiceContract(
 
       // Load active account sequence
       const account = await horizonServer.loadAccount(payerAddress);
-      
+
       // Build Soroban operation on PaymentManager contract
       const operation = Operation.invokeContractFunction({
         contract: config.paymentManagerContractId,
@@ -752,7 +767,7 @@ export async function payInvoiceContract(
       // Sign with Wallet
       const signedTxXdr = await signTxWithWallet((assembledTx as any).toXDR(), payerAddress);
       const finalTx = TransactionBuilder.fromXDR(signedTxXdr, Networks.TESTNET);
-      
+
       // Submit
       const sendResult = await rpcServer.sendTransaction(finalTx);
       if (sendResult.status === 'ERROR') {
@@ -808,7 +823,7 @@ export async function cancelInvoiceContract(
   amount: string
 ): Promise<{ success: boolean; txHash: string; error?: string }> {
   const config = getNetworkConfig();
-  
+
   // Log pending transaction
   const txLog = addTransaction({
     id: `pending_${Math.random().toString(36).substr(2, 9)}`,
@@ -846,7 +861,7 @@ export async function cancelInvoiceContract(
       updateTransactionStatus(txLog.id, 'success', txHash);
       return { success: true, txHash };
     }
-    
+
     updateTransactionStatus(txLog.id, 'failed');
     return { success: false, txHash: '', error: 'Invoice not found!' };
   } else {
@@ -858,7 +873,7 @@ export async function cancelInvoiceContract(
 
       // Load active account sequence
       const account = await horizonServer.loadAccount(creatorAddress);
-      
+
       // Build Soroban operation
       const operation = Operation.invokeContractFunction({
         contract: config.contractId,
@@ -887,7 +902,7 @@ export async function cancelInvoiceContract(
       // Sign with Wallet
       const signedTxXdr = await signTxWithWallet((assembledTx as any).toXDR(), creatorAddress);
       const finalTx = TransactionBuilder.fromXDR(signedTxXdr, Networks.TESTNET);
-      
+
       // Submit
       const sendResult = await rpcServer.sendTransaction(finalTx);
       if (sendResult.status === 'ERROR') {
