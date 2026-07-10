@@ -1,7 +1,7 @@
 # InvoiceX: Create. Send. Get Paid. On Stellar.
 
 <div align="center">
-  <img src="src/assets/hero.png" alt="InvoiceX Logo" width="550" style="border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);" />
+  <img src="logo.png" alt="InvoiceX Logo" width="550" style="border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);" />
 </div>
 
 <div align="center">
